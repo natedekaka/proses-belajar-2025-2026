@@ -1,0 +1,69 @@
+Urutan Pembelajaran python lanjutan 1
+
+
+
+### 1. **List (Daftar)** 🗒️
+
+
+
+Setelah memahami variabel tunggal, memperkenalkan **list** adalah langkah logis. List memungkinkan siswa menyimpan banyak nilai dalam satu variabel. Ini akan membuka banyak kemungkinan, seperti:
+
+- **Contoh Sederhana:** Menyimpan daftar nama siswa atau nilai ulangan.
+- **Konsep:** Menjelaskan bagaimana list diindeks (mulai dari 0), cara mengakses elemen, dan cara mengubahnya.
+- **Praktik:** Minta siswa membuat list berisi nama-nama buah dan menampilkannya menggunakan perulangan `for`. Setelah itu, minta mereka menambahkan atau menghapus item dari list tersebut.
+
+------
+
+
+
+### 2. **Dictionary (Kamus)** 📚
+
+
+
+Setelah list, **dictionary** (atau dikt) adalah topik berikutnya yang ideal. Dictionary adalah struktur data yang menyimpan pasangan **key-value** (kunci-nilai), yang sangat intuitif.
+
+- **Analogi:** Gunakan analogi kamus bahasa Inggris-Indonesia. Kata-kata (key) memiliki arti (value).
+- **Contoh:** Menyimpan data siswa dengan nama sebagai `key` dan usia sebagai `value`.
+- **Manfaat:** Menunjukkan bagaimana dictionary lebih efisien untuk mencari data berdasarkan kunci, bukan indeks.
+
+------
+
+
+
+### 3. **Fungsi (Fungsi Buatan Sendiri)** ⚙️
+
+
+
+Siswa sudah menggunakan fungsi bawaan seperti `print()` dan `input()`. Sekarang saatnya mengajari mereka cara membuat **fungsi sendiri**. Ini adalah konsep krusial untuk membuat kode yang terstruktur, rapi, dan bisa digunakan kembali.
+
+- **Pentingnya:** Jelaskan konsep **DRY** (Don't Repeat Yourself). Menulis kode yang sama berulang-ulang adalah pekerjaan yang sia-sia. Fungsi membantu menghindari ini.
+- **Struktur Dasar:** Perkenalkan sintaks `def nama_fungsi():`.
+- **Contoh Sederhana:** Buat fungsi untuk menghitung luas persegi panjang. Minta siswa membuat fungsi yang menerima nama sebagai argumen dan mencetak sapaan. Ini akan mengenalkan konsep **parameter** dan **argumen**.
+
+------
+
+
+
+### 4. **Modul** 🧩
+
+
+
+Setelah siswa mengerti fungsi, perkenalkan konsep **modul**. Modul adalah file Python yang berisi kumpulan fungsi dan variabel yang dapat digunakan di program lain.
+
+- **Contoh:** Perlihatkan cara mengimpor modul `math` untuk menggunakan fungsi seperti `sqrt()` (akar kuadrat) atau `pi`. Ini akan menunjukkan betapa mudahnya menggunakan kode yang sudah ada.
+- **Manfaat:** Menekankan pentingnya ekosistem **open-source** dan bagaimana para programmer saling berbagi kode.
+
+------
+
+
+
+### Urutan Pembelajaran yang Disarankan
+
+
+
+1. **List:** Konsep ini adalah gerbang pertama menuju struktur data yang lebih kompleks.
+2. **Perulangan dan List:** Gabungkan konsep `for` dengan `list` untuk memanipulasi data.
+3. **Dictionary:** Sampaikan ini sebagai cara lain yang lebih "cerdas" untuk menyimpan data yang berpasangan.
+4. **Fungsi:** Konsep ini sangat penting untuk penataan kode. Berikan contoh yang sederhana dan relevan.
+5. **Modul:** Menunjukkan bagaimana mereka bisa memanfaatkan kode orang lain untuk menyelesaikan masalah.
+
