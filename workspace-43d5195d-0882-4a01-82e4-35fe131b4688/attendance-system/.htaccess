@@ -1,0 +1,40 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Set error pages
+ErrorDocument 404 /index.php?url=error/notFound
+ErrorDocument 500 /index.php?url=error/serverError
+
+# Disable server signature
+ServerSignature Off
+
+# Protect files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect config files
+<FilesMatch "^(config|database)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect htaccess file
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Enable PHP error display for development
+php_flag display_errors on
+php_value error_reporting E_ALL
+?>
