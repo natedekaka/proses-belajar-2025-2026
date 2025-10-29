@@ -1,0 +1,5 @@
+buatkan tabel Agenda, terdiri dari nama header : tanggal, hari, kelas, jam ke, materi, kegiatan, jumlah
+siswa hadir. dari tanggal 1 s.d 31 bulan Oktober 2025, dengan jadwal mengajar hari Senin kelas XI-2 jam
+ke 5-9, Senin Kelas X jam ke 1 -2, selasa kelas XI-3 Jam ke 1-5, Rabu Kelas X-2 Jam ke 5-6, kamis kelas XI-1 Jam Ke 1-5
+dan hari jumat kelas X-3 jam ke 1-2. materi Kelas XI Algoritma dan Pemrograman dasar dengan Python (kegiatan teori dan
+praktik), Materi Kelas X tentang Interaksi manusia dan Komputer (membuat Sketsa UI menu Aplikasi) jumlah siswa kelas XI hadir rentang 33 s.d 36 dan jumlah siswa kelas X rata-rata hadir rentang 45 s.d 48
