@@ -1,4 +1,4 @@
 test hallo
 test git kembali
-di fedora 43
+di omarchy 3.20
 update
