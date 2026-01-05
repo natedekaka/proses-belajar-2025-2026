@@ -1,0 +1,239 @@
+Tentu! Berikut **posting Blogger lengkap** yang menjelaskan cara menggunakan **Podman Compose + MySQL** untuk proyek PHP di **Fedora** — disusun secara menarik, praktis, dan sangat relevan untuk workflow kamu sebagai developer PHP yang menggunakan **Podman**.
+
+---
+
+**Judul Posting:**  
+🧩 Podman Compose + MySQL untuk Proyek PHP di Fedora (Tanpa Docker!)
+
+**Deskripsi Meta (≤150 karakter):**  
+Jalankan PHP + MySQL di Fedora dengan Podman Compose — multi-container, aman, dan rootless!
+
+**Permalink (URL SEO):**  
+`https://namablogmu.com/podman-compose-mysql-php-fedora`
+
+---
+
+### 🧩 Podman Compose + MySQL untuk Proyek PHP di Fedora
+
+Halo developer Fedora! 👋  
+Di tutorial sebelumnya, kamu sudah bisa jalanin PHP 8.4 + Apache pakai **Podman**.  
+Sekarang, saatnya **naik level**:  
+
+> 💡 **Jalankan PHP dan MySQL dalam dua container terpisah — tapi tetap jalan bareng!**
+
+Caranya? Pakai **Podman Compose** — pengganti `docker-compose` yang **100% kompatibel**, tapi jalan native di Fedora **tanpa root** dan **tanpa daemon**!
+
+Mari kita bangun lingkungan development PHP + MySQL yang **bersih, aman, dan siap production**.
+
+---
+
+## ✅ Prasyarat
+
+- Sistem operasi: **Fedora** (36+)
+- Tools terinstall: `podman`, `podman-compose`
+- PHP project sederhana (misal: Laravel, CodeIgniter, atau kustom)
+
+Jika belum punya `podman-compose`:
+```bash
+sudo dnf install -y podman-compose
+```
+
+> ✅ `podman-compose` adalah drop-in replacement untuk `docker-compose` — syntax YAML-nya **sama persis!**
+
+---
+
+## 📁 Struktur Proyek Akhir
+
+```
+my-php-app/
+├── docker-compose.yml   ← konfigurasi multi-container
+├── Dockerfile           ← build image PHP sendiri
+├── src/                 ← kode PHP kamu
+└── .env                 ← (opsional) konfigurasi database
+```
+
+---
+
+## 🐳 1. Buat `Dockerfile` (sama seperti sebelumnya)
+
+```dockerfile
+FROM php:8.4-apache
+
+RUN a2enmod rewrite
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+COPY src/ /var/www/html/
+
+RUN chown -R www-data:www-data /var/www/html
+```
+
+> Tidak ada perubahan! Podman tetap bisa baca ini.
+
+---
+
+## 📄 2. Buat `docker-compose.yml`
+
+Buat file `docker-compose.yml` di root proyek:
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html:Z
+    depends_on:
+      - db
+    networks:
+      - appnet
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass123
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql:Z
+    networks:
+      - appnet
+
+volumes:
+  dbdata:
+
+networks:
+  appnet:
+    driver: bridge
+```
+
+### Penjelasan Penting:
+- `:Z` → **wajib di Fedora** karena SELinux. Ini memberi label keamanan pada volume.
+- `depends_on` → pastikan MySQL jalan dulu sebelum PHP app.
+- `volumes` → data MySQL tetap aman meski container dihapus.
+- Port `3306` dibuka → biar kamu bisa akses DB lewat DBeaver/MySQL Workbench.
+
+---
+
+## 📝 3. Update Kode PHP untuk Coba Koneksi ke MySQL
+
+Edit `src/index.php`:
+
+```php
+<?php
+echo "<h1>✅ PHP + MySQL di Podman Compose!</h1>";
+
+try {
+    $pdo = new PDO(
+        'mysql:host=db;dbname=myapp',
+        'user',
+        'pass123',
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+    echo "<p style='color:green;'>🟢 Berhasil terhubung ke MySQL!</p>";
+    echo "<p>Host: db (nama service di compose)</p>";
+} catch (Exception $e) {
+    echo "<p style='color:red;'>🔴 Gagal: " . $e->getMessage() . "</p>";
+}
+```
+
+> ⚠️ Perhatikan: host-nya **`db`**, bukan `localhost`!  
+> Karena `db` adalah **nama service** di `docker-compose.yml`.
+
+---
+
+## ▶️ 4. Jalankan Semua dengan Podman Compose
+
+Dari folder proyek, jalankan:
+
+```bash
+podman-compose up -d
+```
+
+Tunggu beberapa detik. Podman akan:
+1. Build image PHP dari `Dockerfile`
+2. Download image `mysql:8.0`
+3. Buat jaringan & volume otomatis
+4. Jalankan kedua container
+
+---
+
+## 🌐 5. Akses Aplikasi
+
+Buka browser:  
+👉 [http://localhost:8080](http://localhost:8080)
+
+Jika muncul **"Berhasil terhubung ke MySQL!"** — **selamat!**  
+Kamu baru saja menjalankan **stack PHP + MySQL multi-container** di Fedora **tanpa Docker dan tanpa root!**
+
+---
+
+## 🛠️ Perintah Harian yang Berguna
+
+| Aksi                                | Perintah                 |
+| ----------------------------------- | ------------------------ |
+| Lihat log                           | `podman-compose logs -f` |
+| Hentikan semua                      | `podman-compose down`    |
+| Hapus volume (hapus data DB)        | `podman-compose down -v` |
+| Build ulang setelah ubah Dockerfile | `podman-compose build`   |
+
+---
+
+## 🔒 Keamanan Tambahan (Fedora + SELinux)
+
+- Tanda `:Z` di volume **wajib** — agar Podman bisa baca/tulis file di bawah SELinux.
+- Tidak perlu `sudo` — Podman jalan sebagai user biasa.
+- Isolasi sempurna: PHP dan MySQL di container terpisah.
+
+---
+
+## 💡 Tips Pro
+
+- Untuk Laravel/CI: cukup ubah `.env`:
+  ```
+  DB_HOST=db
+  DB_PORT=3306
+  DB_DATABASE=myapp
+  DB_USERNAME=user
+  DB_PASSWORD=pass123
+  ```
+- Jika ingin MySQL **tidak expose port 3306** ke host (lebih aman), hapus baris `ports` di service `db`. PHP tetap bisa akses via jaringan internal.
+
+---
+
+### Penutup
+
+Dengan **Podman Compose**, kamu dapat:
+✅ Lingkungan development yang mirip production  
+✅ Isolasi sempurna antara app & database  
+✅ Workflow cepat, aman, dan native di Fedora  
+
+Dan yang terpenting: **tidak perlu Docker sama sekali!**
+
+---
+
+**Next step?**  
+Mau tutorial:  
+➡️ **Jalankan Podman Compose sebagai systemd service?**  
+➡️ **Auto-reload PHP tanpa rebuild?**  
+➡️ **Deploy ke server Fedora dengan Podman?**
+
+Komentar di bawah! Jangan lupa **bagikan** ke sesama pengguna Fedora 💬
+
+---
+
+*#Podman #FedoraLinux #PHP #MySQL #PodmanCompose #WebDevelopment #LinuxDeveloper #SELinux #OpenSource*
+
+---
+
+> **Catatan:** Pastikan versi `php:8.4-apache` tersedia. Jika belum stabil, ganti dengan `php:8.3-apache`. Image MySQL (`mysql:8.0`) sudah stabil dan direkomendasikan.
+
+---
+
+Ganti `namablogmu.com` dengan domain blogmu, lalu publish!  
+Happy coding di Fedora — dengan container yang benar-benar open source! 🐧✨
